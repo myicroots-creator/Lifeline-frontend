@@ -1,3 +1,5 @@
+import Image from "next/image"
+
 import Link from "next/link"
 import { Button } from "@/components/ui/button"
 import { Card } from "@/components/ui/card"
@@ -11,9 +13,20 @@ export default function LandingPage() {
         <div className="container mx-auto px-4 sm:px-6 lg:px-8">
           <div className="flex h-16 items-center justify-between">
             <div className="flex items-center gap-2">
-              <div className="flex h-10 w-10 items-center justify-center rounded-lg bg-primary">
+              {/* <div className="flex h-10 w-10 items-center justify-center rounded-lg bg-primary">
                 <Heart className="h-6 w-6 text-primary-foreground fill-current" />
-              </div>
+              </div> */}
+              <div className="flex items-center gap-2 ">
+  <Image 
+    src="/lifeline.png" 
+    alt="Lifeline Logo" 
+    width={80} 
+    height={80} 
+    className="rounded-lg"
+  />
+  
+  </div>
+
               <span className="text-xl font-bold">Lifeline</span>
             </div>
             <div className="hidden md:flex items-center gap-8">
@@ -267,9 +280,20 @@ export default function LandingPage() {
           <div className="grid md:grid-cols-4 gap-8">
             <div>
               <div className="flex items-center gap-2 mb-4">
-                <div className="flex h-8 w-8 items-center justify-center rounded-lg bg-primary">
+                {/* <div className="flex h-8 w-8 items-center justify-center rounded-lg bg-primary">
                   <Heart className="h-5 w-5 text-primary-foreground fill-current" />
-                </div>
+                </div> */}
+                           <div className="flex items-center gap-2 ">
+  <Image 
+    src="/lifeline.png" 
+    alt="Lifeline Logo" 
+    width={60} 
+    height={60} 
+    className="rounded-lg"
+  />
+  
+  </div>
+                
                 <span className="text-lg font-bold">Lifeline</span>
               </div>
               <p className="text-sm text-muted-foreground">Predict. Connect. Save Lives.</p>
