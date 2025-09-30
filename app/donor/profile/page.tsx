@@ -45,7 +45,7 @@ export default function DonorProfile() {
               <Label htmlFor="name">Full Name</Label>
               <div className="relative">
                 <User className="absolute left-3 top-3 h-4 w-4 text-muted-foreground" />
-                <Input id="name" defaultValue="John Doe" className="pl-10" />
+                <Input id="name" placeholder="Lydia Solomon" className="pl-10" />
               </div>
             </div>
 
@@ -53,7 +53,7 @@ export default function DonorProfile() {
               <Label htmlFor="email">Email</Label>
               <div className="relative">
                 <Mail className="absolute left-3 top-3 h-4 w-4 text-muted-foreground" />
-                <Input id="email" type="email" defaultValue="john.doe@example.com" className="pl-10" />
+                <Input id="email" type="email" placeholder="lydiasolomon@example.com" className="pl-10" />
               </div>
             </div>
 
@@ -61,7 +61,7 @@ export default function DonorProfile() {
               <Label htmlFor="phone">Phone Number</Label>
               <div className="relative">
                 <Phone className="absolute left-3 top-3 h-4 w-4 text-muted-foreground" />
-                <Input id="phone" type="tel" defaultValue="+1 (555) 123-4567" className="pl-10" />
+                <Input id="phone" type="tel" placeholder="+234 (805) 453-4997" className="pl-10" />
               </div>
             </div>
 
@@ -69,7 +69,7 @@ export default function DonorProfile() {
               <Label htmlFor="location">Location</Label>
               <div className="relative">
                 <MapPin className="absolute left-3 top-3 h-4 w-4 text-muted-foreground" />
-                <Input id="location" defaultValue="New York, NY" className="pl-10" />
+                <Input id="location" placeholder="New York, NY" className="pl-10" />
               </div>
             </div>
 

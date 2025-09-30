@@ -322,17 +322,17 @@ export default function LandingPage() {
               <h4 className="font-semibold mb-4">Company</h4>
               <ul className="space-y-2 text-sm text-muted-foreground">
                 <li>
-                  <Link href="/about" className="hover:text-foreground transition-colors">
+                  <Link href="#how-it-works" className="hover:text-foreground transition-colors">
                     About
                   </Link>
                 </li>
                 <li>
-                  <Link href="/contact" className="hover:text-foreground transition-colors">
+                  <Link href="#contact" className="hover:text-foreground transition-colors">
                     Contact
                   </Link>
                 </li>
                 <li>
-                  <Link href="/privacy" className="hover:text-foreground transition-colors">
+                  <Link href="#privacy" className="hover:text-foreground transition-colors">
                     Privacy Policy
                   </Link>
                 </li>
@@ -342,12 +342,12 @@ export default function LandingPage() {
               <h4 className="font-semibold mb-4">Legal</h4>
               <ul className="space-y-2 text-sm text-muted-foreground">
                 <li>
-                  <Link href="/terms" className="hover:text-foreground transition-colors">
+                  <Link href="#terms" className="hover:text-foreground transition-colors">
                     Terms & Conditions
                   </Link>
                 </li>
                 <li>
-                  <Link href="/regulatory" className="hover:text-foreground transition-colors">
+                  <Link href="#regulatory" className="hover:text-foreground transition-colors">
                     Regulatory Notice
                   </Link>
                 </li>
