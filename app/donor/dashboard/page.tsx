@@ -1,5 +1,6 @@
 "use client";
 
+import { useState, useEffect } from 'react';
 import {
   Card,
   CardContent,
@@ -10,6 +11,8 @@ import {
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { DonorLayout } from "@/components/donor/donor-layout";
+import { BookingModal } from "@/components/donor/BookingModal";
+import { ResponseModal } from "@/components/donor/ResponseModal";
 import {
   Calendar,
   Heart,
@@ -20,7 +23,30 @@ import {
   TrendingUp,
 } from "lucide-react";
 
+// Define a type for our booking data for better code safety
+interface Booking {
+  hospital: string;
+  date: string;
+}
+
 export default function DonorDashboard() {
+  // State for the two modals
+  const [isBookingModalOpen, setIsBookingModalOpen] = useState(false);
+  const [isResponseModalOpen, setIsResponseModalOpen] = useState(false);
+  const [selectedHospitalForResponse, setSelectedHospitalForResponse] = useState<string | null>(null);
+  
+  // State for the dynamic booking reminder
+  const [upcomingBooking, setUpcomingBooking] = useState<Booking | null>(null);
+
+  // This effect runs once when the component loads to check for a saved booking
+  useEffect(() => {
+    const savedBooking = localStorage.getItem('lifelineBooking');
+    if (savedBooking) {
+      setUpcomingBooking(JSON.parse(savedBooking));
+    }
+  }, []);
+
+  // Hardcoded data for the demo
   const donorProfile = {
     name: "Lydia Solomon",
     bloodType: "O+",
@@ -45,12 +71,7 @@ export default function DonorDashboard() {
     },
   ];
 
-  const upcomingReminders = [
-    {
-      title: "Eligible to donate again",
-      date: "Feb 15, 2025",
-      type: "eligibility",
-    },
+  const defaultReminders = [
     {
       title: "Health checkup recommended",
       date: "Feb 20, 2025",
@@ -58,11 +79,24 @@ export default function DonorDashboard() {
     },
   ];
 
-  const handleRespond = (hospital: string) => {
-    console.log("[v0] Responding to shortage at:", hospital);
-    alert(
-      `Thank you for responding! ${hospital} will contact you shortly to schedule your donation.`
-    );
+  // Handler for the "Respond" button in the shortages card
+  const handleRespondClick = (hospital: string) => {
+    setSelectedHospitalForResponse(hospital);
+    setIsResponseModalOpen(true);
+  };
+
+  const handleCloseResponseModal = () => {
+    setIsResponseModalOpen(false);
+    setSelectedHospitalForResponse(null);
+  };
+
+  // Handler for the "Book Donation Slot" button
+  const handleBookingSuccess = () => {
+    const savedBooking = localStorage.getItem('lifelineBooking');
+    if (savedBooking) {
+      setUpcomingBooking(JSON.parse(savedBooking));
+    }
+    setIsBookingModalOpen(false);
   };
 
   return (
@@ -196,7 +230,7 @@ export default function DonorDashboard() {
                 </div>
                 <Button
                   size="sm"
-                  onClick={() => handleRespond(shortage.hospital)}
+                  onClick={() => handleRespondClick(shortage.hospital)}
                 >
                   Respond
                 </Button>
@@ -212,7 +246,21 @@ export default function DonorDashboard() {
             <CardDescription>Important dates and notifications</CardDescription>
           </CardHeader>
           <CardContent className="space-y-3">
-            {upcomingReminders.map((reminder, index) => (
+            {upcomingBooking && (
+              <div className="flex items-center gap-3 p-3 rounded-lg bg-primary/10 border border-primary/30">
+                <div className="flex h-10 w-10 items-center justify-center rounded-full bg-primary/20 text-primary">
+                  <Calendar className="h-5 w-5" />
+                </div>
+                <div className="flex-1">
+                  <p className="text-sm font-medium">Upcoming Donation Appointment</p>
+                  <p className="text-xs text-muted-foreground">
+                    {upcomingBooking.hospital} on {new Date(upcomingBooking.date).toLocaleDateString('en-US', { year: 'numeric', month: 'long', day: 'numeric' })}
+                  </p>
+                </div>
+              </div>
+            )}
+
+            {defaultReminders.map((reminder, index) => (
               <div
                 key={index}
                 className="flex items-center gap-3 p-3 rounded-lg bg-card border border-border"
@@ -245,9 +293,6 @@ export default function DonorDashboard() {
         <Card className="border-border bg-gradient-to-br from-primary/10 to-accent/10 border-primary/20">
           <CardContent className="pt-6">
             <div className="text-center space-y-4">
-              {/* <div className="flex h-16 w-16 items-center justify-center rounded-full bg-primary mx-auto">
-                <Heart className="h-8 w-8 text-primary-foreground fill-current" />
-              </div> */}
               <div className="flex items-center justify-center">
                 <img
                   src="/lifeline.png"
@@ -259,18 +304,26 @@ export default function DonorDashboard() {
               <div>
                 <h3 className="text-xl font-bold mb-2">Ready to Save Lives?</h3>
                 <p className="text-muted-foreground mb-4">
-                  You'll be eligible to donate again on{" "}
-                  {donorProfile.nextEligible}
+                  You're eligible to donate. Schedule your next appointment.
                 </p>
               </div>
-              <Button size="lg" disabled>
+              <Button size="lg" onClick={() => setIsBookingModalOpen(true)}>
                 Book Donation Slot
-                <span className="ml-2 text-xs">(Available Feb 15)</span>
               </Button>
             </div>
           </CardContent>
         </Card>
       </div>
+
+      {/* --- RENDER BOTH MODALS CONDITIONALLY --- */}
+      {isBookingModalOpen && <BookingModal onBookingSuccess={handleBookingSuccess} />}
+      
+      {isResponseModalOpen && selectedHospitalForResponse && (
+        <ResponseModal
+          hospitalName={selectedHospitalForResponse}
+          onClose={handleCloseResponseModal}
+        />
+      )}
     </DonorLayout>
   );
 }
