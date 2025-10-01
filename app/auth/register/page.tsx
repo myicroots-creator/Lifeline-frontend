@@ -80,6 +80,22 @@ export default function RegisterPage() {
       `Simulating ${formData.role} registration for:`,
       formData.email
     );
+	
+	let data;
+	if(formData.role == "hospital"){
+		const res = await fetch("https://lifeline-api-b3zn.onrender.com/hospitals",{
+			method: "POST",
+			body: JSON.stringify({
+				name: formData.name,
+				location: "Yaba",
+			})
+		})
+		
+		data = await res.json()
+		console.log(data)
+		
+	}
+
     await new Promise((resolve) => setTimeout(resolve, 1500)); // Fake network delay for demo
 
     // Store mock user info in localStorage so the dashboard pages can use it

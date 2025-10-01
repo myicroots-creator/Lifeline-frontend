@@ -61,7 +61,7 @@ export default function HospitalInventory() {
             <CardDescription>Real-time blood inventory across all types</CardDescription>
           </CardHeader>
           <CardContent>
-            <InventoryTable />
+            <InventoryTable inventory={ [] } />
           </CardContent>
         </Card>
       </div>
