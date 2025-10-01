@@ -102,7 +102,7 @@ export default function DonorDashboard() {
   return (
     <DonorLayout>
       <div className="space-y-6">
-        {/* Welcome Section */}
+        {/* === TOP SECTION (UNCHANGED) === */}
         <div>
           <h1 className="text-3xl font-bold">
             Welcome back, {donorProfile.name}
@@ -112,7 +112,6 @@ export default function DonorDashboard() {
           </p>
         </div>
 
-        {/* Profile Card */}
         <Card className="border-border bg-gradient-to-br from-primary/10 to-accent/10 border-primary/20">
           <CardContent className="pt-6">
             <div className="flex items-center justify-between">
@@ -141,40 +140,28 @@ export default function DonorDashboard() {
           </CardContent>
         </Card>
 
-        {/* Stats Grid */}
+        {/* === STATS GRID (UNCHANGED) === */}
         <div className="grid gap-4 md:grid-cols-3">
           <Card className="border-border">
             <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-              <CardTitle className="text-sm font-medium">
-                Lives Impacted
-              </CardTitle>
+              <CardTitle className="text-sm font-medium">Lives Impacted</CardTitle>
               <Heart className="h-4 w-4 text-primary" />
             </CardHeader>
             <CardContent>
-              <div className="text-2xl font-bold">
-                {donorProfile.livesImpacted}
-              </div>
-              <p className="text-xs text-muted-foreground">
-                Each donation helps 3 people
-              </p>
+              <div className="text-2xl font-bold">{donorProfile.livesImpacted}</div>
+              <p className="text-xs text-muted-foreground">Each donation helps 3 people</p>
             </CardContent>
           </Card>
-
           <Card className="border-border">
             <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-              <CardTitle className="text-sm font-medium">
-                Last Donation
-              </CardTitle>
+              <CardTitle className="text-sm font-medium">Last Donation</CardTitle>
               <Calendar className="h-4 w-4 text-muted-foreground" />
             </CardHeader>
             <CardContent>
-              <div className="text-2xl font-bold">
-                {donorProfile.lastDonation}
-              </div>
+              <div className="text-2xl font-bold">{donorProfile.lastDonation}</div>
               <p className="text-xs text-muted-foreground">92 days ago</p>
             </CardContent>
           </Card>
-
           <Card className="border-border">
             <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
               <CardTitle className="text-sm font-medium">Donor Level</CardTitle>
@@ -186,126 +173,14 @@ export default function DonorDashboard() {
             </CardContent>
           </Card>
         </div>
-
-        {/* Shortage Alerts */}
+        
+        {/* === NEW POSITION: BOOK DONATION CTA (MOVED UP) === */}
         <Card className="border-border">
-          <CardHeader>
-            <div className="flex items-center justify-between">
-              <div>
-                <CardTitle>Nearby Shortages</CardTitle>
-                <CardDescription>
-                  Hospitals near you need your blood type
-                </CardDescription>
-              </div>
-              <Bell className="h-5 w-5 text-primary" />
-            </div>
-          </CardHeader>
-          <CardContent className="space-y-3">
-            {nearbyShortages.map((shortage, index) => (
-              <div
-                key={index}
-                className="flex items-center justify-between p-4 rounded-lg bg-card border border-border"
-              >
-                <div className="flex-1">
-                  <div className="flex items-center gap-2 mb-1">
-                    <p className="font-medium">{shortage.hospital}</p>
-                    <Badge
-                      variant="outline"
-                      className={
-                        shortage.urgency === "critical"
-                          ? "bg-primary/20 text-primary border-primary/30"
-                          : "bg-yellow-500/20 text-yellow-500 border-yellow-500/30"
-                      }
-                    >
-                      {shortage.urgency}
-                    </Badge>
-                  </div>
-                  <div className="flex items-center gap-4 text-sm text-muted-foreground">
-                    <span className="flex items-center gap-1">
-                      <MapPin className="h-3 w-3" />
-                      {shortage.distance}
-                    </span>
-                    <span className="font-mono">{shortage.bloodType}</span>
-                  </div>
-                </div>
-                <Button
-                  size="sm"
-                  onClick={() => handleRespondClick(shortage.hospital)}
-                >
-                  Respond
-                </Button>
-              </div>
-            ))}
-          </CardContent>
-        </Card>
-
-        {/* Reminders */}
-        <Card className="border-border">
-          <CardHeader>
-            <CardTitle>Upcoming Reminders</CardTitle>
-            <CardDescription>Important dates and notifications</CardDescription>
-          </CardHeader>
-          <CardContent className="space-y-3">
-            {upcomingBooking && (
-              <div className="flex items-center gap-3 p-3 rounded-lg bg-primary/10 border border-primary/30">
-                <div className="flex h-10 w-10 items-center justify-center rounded-full bg-primary/20 text-primary">
-                  <Calendar className="h-5 w-5" />
-                </div>
-                <div className="flex-1">
-                  <p className="text-sm font-medium">Upcoming Donation Appointment</p>
-                  <p className="text-xs text-muted-foreground">
-                    {upcomingBooking.hospital} on {new Date(upcomingBooking.date).toLocaleDateString('en-US', { year: 'numeric', month: 'long', day: 'numeric' })}
-                  </p>
-                </div>
-              </div>
-            )}
-
-            {defaultReminders.map((reminder, index) => (
-              <div
-                key={index}
-                className="flex items-center gap-3 p-3 rounded-lg bg-card border border-border"
-              >
-                <div
-                  className={`flex h-10 w-10 items-center justify-center rounded-full ${
-                    reminder.type === "eligibility"
-                      ? "bg-accent/10 text-accent"
-                      : "bg-primary/10 text-primary"
-                  }`}
-                >
-                  {reminder.type === "eligibility" ? (
-                    <Clock className="h-5 w-5" />
-                  ) : (
-                    <TrendingUp className="h-5 w-5" />
-                  )}
-                </div>
-                <div className="flex-1">
-                  <p className="text-sm font-medium">{reminder.title}</p>
-                  <p className="text-xs text-muted-foreground">
-                    {reminder.date}
-                  </p>
-                </div>
-              </div>
-            ))}
-          </CardContent>
-        </Card>
-
-        {/* Book Donation CTA */}
-        <Card className="border-border bg-gradient-to-br from-primary/10 to-accent/10 border-primary/20">
           <CardContent className="pt-6">
-            <div className="text-center space-y-4">
-              <div className="flex items-center justify-center">
-                <img
-                  src="/lifeline.png"
-                  alt="Lifeline Logo"
-                  className="h-12 w-12 object-contain"
-                />
-              </div>
-
-              <div>
-                <h3 className="text-xl font-bold mb-2">Ready to Save Lives?</h3>
-                <p className="text-muted-foreground mb-4">
-                  You're eligible to donate. Schedule your next appointment.
-                </p>
+            <div className="flex flex-col md:flex-row items-center justify-between gap-4">
+              <div className="flex-1 text-center md:text-left">
+                <h3 className="text-xl font-bold">Ready to Save Lives?</h3>
+                <p className="text-muted-foreground mt-1">You're eligible to book a donation appointment.</p>
               </div>
               <Button size="lg" onClick={() => setIsBookingModalOpen(true)}>
                 Book Donation Slot
@@ -313,6 +188,107 @@ export default function DonorDashboard() {
             </div>
           </CardContent>
         </Card>
+
+        {/* === NEW LAYOUT: Main Content + Sidebar === */}
+        <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
+
+          {/* Left Column: Main Content */}
+          <div className="lg:col-span-2 space-y-6">
+            {/* Shortage Alerts */}
+            <Card className="border-border">
+              <CardHeader>
+                <div className="flex items-center justify-between">
+                  <div>
+                    <CardTitle>Nearby Shortages</CardTitle>
+                    <CardDescription>Hospitals near you need your blood type</CardDescription>
+                  </div>
+                  <Bell className="h-5 w-5 text-primary" />
+                </div>
+              </CardHeader>
+              <CardContent className="space-y-3">
+                {nearbyShortages.map((shortage, index) => (
+                  <div key={index} className="flex items-center justify-between p-4 rounded-lg bg-card border border-border">
+                    <div className="flex-1">
+                      <div className="flex items-center gap-2 mb-1">
+                        <p className="font-medium">{shortage.hospital}</p>
+                        <Badge variant="outline" className={shortage.urgency === "critical" ? "bg-primary/20 text-primary border-primary/30" : "bg-yellow-500/20 text-yellow-500 border-yellow-500/30"}>
+                          {shortage.urgency}
+                        </Badge>
+                      </div>
+                      <div className="flex items-center gap-4 text-sm text-muted-foreground">
+                        <span className="flex items-center gap-1"><MapPin className="h-3 w-3" />{shortage.distance}</span>
+                        <span className="font-mono">{shortage.bloodType}</span>
+                      </div>
+                    </div>
+                    <Button size="sm" onClick={() => handleRespondClick(shortage.hospital)}>
+                      Respond
+                    </Button>
+                  </div>
+                ))}
+              </CardContent>
+            </Card>
+
+            {/* Reminders */}
+            <Card className="border-border">
+              <CardHeader>
+                <CardTitle>Upcoming Reminders</CardTitle>
+                <CardDescription>Important dates and notifications</CardDescription>
+              </CardHeader>
+              <CardContent className="space-y-3">
+                {upcomingBooking && (
+                  <div className="flex items-center gap-3 p-3 rounded-lg bg-primary/10 border border-primary/30">
+                    <div className="flex h-10 w-10 items-center justify-center rounded-full bg-primary/20 text-primary">
+                      <Calendar className="h-5 w-5" />
+                    </div>
+                    <div className="flex-1">
+                      <p className="text-sm font-medium">Upcoming Donation Appointment</p>
+                      <p className="text-xs text-muted-foreground">
+                        {upcomingBooking.hospital} on {new Date(upcomingBooking.date).toLocaleDateString('en-US', { year: 'numeric', month: 'long', day: 'numeric' })}
+                      </p>
+                    </div>
+                  </div>
+                )}
+                {defaultReminders.map((reminder, index) => (
+                  <div key={index} className="flex items-center gap-3 p-3 rounded-lg bg-card border border-border">
+                    <div className={`flex h-10 w-10 items-center justify-center rounded-full bg-accent/10 text-accent`}>
+                      <TrendingUp className="h-5 w-5" />
+                    </div>
+                    <div className="flex-1">
+                      <p className="text-sm font-medium">{reminder.title}</p>
+                      <p className="text-xs text-muted-foreground">{reminder.date}</p>
+                    </div>
+                  </div>
+                ))}
+              </CardContent>
+            </Card>
+          </div>
+
+          {/* Right Column: Sidebar */}
+          <div className="lg:col-span-1 space-y-6">
+            <Card className="border-border">
+              <CardHeader>
+                <CardTitle>Your Impact</CardTitle>
+                <CardDescription>A summary of your contribution.</CardDescription>
+              </CardHeader>
+              <CardContent className="space-y-4">
+                  <div className="flex items-center">
+                    <Heart className="h-5 w-5 text-muted-foreground mr-4"/>
+                    <div className="flex-1">
+                      <p className="font-medium">Total Donations</p>
+                      <p className="text-2xl font-bold">{donorProfile.totalDonations}</p>
+                    </div>
+                  </div>
+                  <div className="flex items-center">
+                    <Award className="h-5 w-5 text-muted-foreground mr-4"/>
+                    <div className="flex-1">
+                      <p className="font-medium">Donor Level</p>
+                      <p className="text-2xl font-bold text-accent">Gold</p>
+                    </div>
+                  </div>
+              </CardContent>
+            </Card>
+          </div>
+        </div>
       </div>
 
       {/* --- RENDER BOTH MODALS CONDITIONALLY --- */}
