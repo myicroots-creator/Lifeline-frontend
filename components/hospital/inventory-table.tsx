@@ -35,7 +35,7 @@ export function InventoryTable({ inventory }: { inventory: InventoryItem[] }) {
         </TableRow>
       </TableHeader>
       <TableBody>
-        {inventory.map((item) => {
+        {inventory.reverse().map((item) => {
           const status = getExpiryStatus(item.expiryDate);
           return (
             <TableRow key={item.id}>

@@ -30,7 +30,12 @@ export default function HospitalInventory() {
     // Export logic would go here - for now just show it's working
     alert("Exporting inventory data as CSV...")
   }
-
+  
+  const initialInventoryData: InventoryItem[] = [
+	  { id: 'UNIT-001', bloodType: 'A+', units: 10, donorId: 'D-101', expiryDate: '2024-09-15' },
+	  { id: 'UNIT-002', bloodType: 'O-', units: 5, donorId: 'D-102', expiryDate: '2024-08-30' },
+	  { id: 'UNIT-003', bloodType: 'B+', units: 8, donorId: 'D-103', expiryDate: '2024-08-25' },
+	];	
   return (
     <HospitalLayout>
       <div className="space-y-6">
@@ -61,7 +66,7 @@ export default function HospitalInventory() {
             <CardDescription>Real-time blood inventory across all types</CardDescription>
           </CardHeader>
           <CardContent>
-            <InventoryTable inventory={ [] } />
+            <InventoryTable inventory={ initialInventoryData } />
           </CardContent>
         </Card>
       </div>

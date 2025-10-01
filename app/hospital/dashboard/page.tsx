@@ -95,7 +95,9 @@ export default function HospitalDashboard() {
   // --- HANDLERS ---
   const handleAddInventory = (newItem: Omit<InventoryItem, 'id'>) => {
     const newInventoryItem = { ...newItem, id: `UNIT-${Date.now().toString().slice(-4)}` };
+	console.log(newInventoryItem)
     setInventory(prev => [...prev, newInventoryItem]);
+	console.log(inventory)
   };
 
   const handleAddRequest = (newRequest: Omit<BloodRequest, 'id' | 'status'>) => {
