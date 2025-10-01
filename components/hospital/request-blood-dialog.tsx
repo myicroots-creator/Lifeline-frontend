@@ -1,107 +1,86 @@
-"use client"
-
-import type React from "react"
-
 import { useState } from "react"
-import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle } from "@/components/ui/dialog"
+import { Dialog, DialogContent, DialogDescription, DialogFooter, DialogHeader, DialogTitle } from "@/components/ui/dialog"
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
 import { Label } from "@/components/ui/label"
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select"
-import { Textarea } from "@/components/ui/textarea"
+
+export type BloodRequest = {
+  id: string;
+  hospital: string;
+  bloodType: string;
+  units: number;
+  priority: 'High' | 'Medium' | 'Low';
+  status: 'Pending' | 'Fulfilled' | 'Cancelled';
+};
 
 interface RequestBloodDialogProps {
-  open: boolean
-  onOpenChange: (open: boolean) => void
+  open: boolean;
+  onOpenChange: (open: boolean) => void;
+  onAddRequest: (request: Omit<BloodRequest, 'id' | 'status'>) => void;
 }
 
-export function RequestBloodDialog({ open, onOpenChange }: RequestBloodDialogProps) {
-  const [formData, setFormData] = useState({
-    bloodType: "",
-    units: "",
-    urgency: "",
-    notes: "",
-  })
+export function RequestBloodDialog({ open, onOpenChange, onAddRequest }: RequestBloodDialogProps) {
+  const [hospital, setHospital] = useState('');
+  const [bloodType, setBloodType] = useState('O-');
+  const [units, setUnits] = useState(1);
+  const [priority, setPriority] = useState<'High' | 'Medium' | 'Low'>('Medium');
 
-  const handleSubmit = (e: React.FormEvent) => {
-    e.preventDefault()
-    // Handle form submission
-    onOpenChange(false)
-  }
+  const handleSubmit = () => {
+    if (!hospital || units < 1) {
+      alert("Please fill all fields correctly.");
+      return;
+    }
+    onAddRequest({ hospital, bloodType, units, priority });
+    onOpenChange(false);
+    // Reset form
+    setHospital(''); setBloodType('O-'); setUnits(1); setPriority('Medium');
+  };
 
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>
       <DialogContent>
         <DialogHeader>
-          <DialogTitle>Request Blood from Network</DialogTitle>
-          <DialogDescription>Request blood units from nearby hospitals in the Lifeline network</DialogDescription>
+          <DialogTitle>Create New Blood Request</DialogTitle>
+          <DialogDescription>Request blood units from other facilities.</DialogDescription>
         </DialogHeader>
-
-        <form onSubmit={handleSubmit} className="space-y-4">
-          <div className="space-y-2">
-            <Label htmlFor="bloodType">Blood Type Needed</Label>
-            <Select
-              value={formData.bloodType}
-              onValueChange={(value) => setFormData({ ...formData, bloodType: value })}
-            >
-              <SelectTrigger>
-                <SelectValue placeholder="Select blood type" />
-              </SelectTrigger>
+        <div className="grid gap-4 py-4">
+          <div className="grid grid-cols-4 items-center gap-4">
+            <Label htmlFor="hospital" className="text-right">Hospital</Label>
+            <Input id="hospital" value={hospital} onChange={(e) => setHospital(e.target.value)} className="col-span-3" placeholder="e.g., St. Jude's Hospital" />
+          </div>
+          <div className="grid grid-cols-4 items-center gap-4">
+            <Label htmlFor="bloodType" className="text-right">Blood Type</Label>
+            <Select value={bloodType} onValueChange={(value) => setBloodType(value)}>
+              <SelectTrigger className="col-span-3"><SelectValue /></SelectTrigger>
               <SelectContent>
-                <SelectItem value="A+">A+</SelectItem>
-                <SelectItem value="A-">A-</SelectItem>
-                <SelectItem value="B+">B+</SelectItem>
-                <SelectItem value="B-">B-</SelectItem>
-                <SelectItem value="AB+">AB+</SelectItem>
-                <SelectItem value="AB-">AB-</SelectItem>
-                <SelectItem value="O+">O+</SelectItem>
-                <SelectItem value="O-">O-</SelectItem>
+                {['A+', 'A-', 'B+', 'B-', 'AB+', 'AB-', 'O+', 'O-'].map(type => 
+                  <SelectItem key={type} value={type}>{type}</SelectItem>
+                )}
               </SelectContent>
             </Select>
           </div>
-
-          <div className="space-y-2">
-            <Label htmlFor="units">Units Required</Label>
-            <Input
-              id="units"
-              type="number"
-              placeholder="5"
-              value={formData.units}
-              onChange={(e) => setFormData({ ...formData, units: e.target.value })}
-              required
-            />
+          <div className="grid grid-cols-4 items-center gap-4">
+            <Label htmlFor="units" className="text-right">Units</Label>
+            <Input id="units" type="number" value={units} onChange={e => setUnits(Math.max(1, parseInt(e.target.value) || 1))} className="col-span-3" />
           </div>
-
-          <div className="space-y-2">
-            <Label htmlFor="urgency">Urgency Level</Label>
-            <Select value={formData.urgency} onValueChange={(value) => setFormData({ ...formData, urgency: value })}>
-              <SelectTrigger>
-                <SelectValue placeholder="Select urgency" />
-              </SelectTrigger>
+          <div className="grid grid-cols-4 items-center gap-4">
+            <Label htmlFor="priority" className="text-right">Priority</Label>
+            <Select value={priority} onValueChange={(value: 'High' | 'Medium' | 'Low') => setPriority(value)}>
+              <SelectTrigger className="col-span-3"><SelectValue /></SelectTrigger>
               <SelectContent>
-                <SelectItem value="critical">Critical (within 2 hours)</SelectItem>
-                <SelectItem value="urgent">Urgent (within 24 hours)</SelectItem>
-                <SelectItem value="normal">Normal (within 3 days)</SelectItem>
+                <SelectItem value="Low">Low</SelectItem>
+                <SelectItem value="Medium">Medium</SelectItem>
+                <SelectItem value="High">High</SelectItem>
               </SelectContent>
             </Select>
           </div>
-
-          <div className="space-y-2">
-            <Label htmlFor="notes">Additional Notes</Label>
-            <Textarea
-              id="notes"
-              placeholder="Any additional information..."
-              value={formData.notes}
-              onChange={(e) => setFormData({ ...formData, notes: e.target.value })}
-              rows={3}
-            />
-          </div>
-
-          <Button type="submit" className="w-full">
-            Send Request
-          </Button>
-        </form>
+        </div>
+        <DialogFooter>
+          <Button variant="outline" onClick={() => onOpenChange(false)}>Cancel</Button>
+          <Button onClick={handleSubmit}>Submit Request</Button>
+        </DialogFooter>
       </DialogContent>
     </Dialog>
-  )
+  );
 }
