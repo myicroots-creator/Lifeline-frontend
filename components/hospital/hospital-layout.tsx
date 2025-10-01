@@ -30,9 +30,16 @@ export function HospitalLayout({ children }: HospitalLayoutProps) {
       <nav className="border-b border-border bg-card sticky top-0 z-50">
         <div className="flex h-16 items-center px-4 sm:px-6 lg:px-8">
           <div className="flex items-center gap-2">
-            <div className="flex h-10 w-10 items-center justify-center rounded-lg bg-primary">
+            {/* <div className="flex h-10 w-10 items-center justify-center rounded-lg bg-primary">
               <Heart className="h-6 w-6 text-primary-foreground fill-current" />
-            </div>
+            </div> */}
+              <div className="flex items-center justify-center">
+                <img
+                  src="/lifeline.png"
+                  alt="Lifeline Logo"
+                  className="h-12 w-12 object-contain"
+                />
+              </div>
             <div>
               <span className="text-lg font-bold">Lifeline</span>
               <div className="text-xs text-muted-foreground">City General Hospital</div>
