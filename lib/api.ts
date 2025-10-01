@@ -2,7 +2,7 @@
 import axios from 'axios';
 
 // The live URL of your deployed backend
-const API_BASE_URL = 'https://lifeline-api-b3zn.render.com';
+const API_BASE_URL = 'https://lifeline-api-b3zn.onrender.com';
 
 // Create a reusable Axios instance
 const apiClient = axios.create({

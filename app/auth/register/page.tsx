@@ -31,8 +31,8 @@ import {
   Loader2,
 } from "lucide-react";
 
-// Import our API functions (still needed for hospital registration)
-import { register, login } from "@/lib/api"; 
+// NOTE: API imports are no longer needed as we are mocking everything.
+// import { register, login } from "@/lib/api"; 
 
 export default function RegisterPage() {
   const router = useRouter();
@@ -58,6 +58,7 @@ export default function RegisterPage() {
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
 
+    // --- Standard validation ---
     if (formData.password !== formData.confirmPassword) {
       setError("Passwords do not match.");
       return;
@@ -66,48 +67,37 @@ export default function RegisterPage() {
       setError("Please select your blood type.");
       return;
     }
+    if (formData.role === 'hospital' && !formData.organization) {
+      setError("Please enter the hospital name.");
+      return;
+    }
 
     setError("");
     setIsLoading(true);
 
-    // --- SMART SUBMIT LOGIC ---
-    if (formData.role === 'hospital') {
-      // --- REAL REGISTRATION FOR HOSPITALS ---
-      try {
-        const userData = {
-          email: formData.email,
-          password: formData.password,
-          role: 'hospital_staff',
-          hospital_id: 1, // Assumes hospital #1 exists
-        };
-        await register(userData);
-        await login(formData.email, formData.password);
-        router.push("/hospital/dashboard");
-      } catch (apiError: any) {
-        const errorMessage = apiError.response?.data?.detail || "An error occurred.";
-        setError(errorMessage);
-      } finally {
-        setIsLoading(false);
-      }
-    } else {
-      // --- MOCK REGISTRATION FOR DONORS ---
-      // This part does NOT touch the backend.
-      console.log("Simulating donor registration for:", formData);
-      await new Promise((resolve) => setTimeout(resolve, 1500)); // Fake network delay
+    // --- FULLY MOCKED REGISTRATION FOR ALL ROLES ---
+    console.log(`Simulating ${formData.role} registration for:`, formData.email);
+    await new Promise((resolve) => setTimeout(resolve, 1500)); // Fake network delay for demo
 
-      // To make the dashboard work, we'll store mock user info in localStorage
-      const mockUser = {
-        name: formData.name,
-        email: formData.email,
-        bloodType: formData.bloodType,
-        role: 'donor',
-        // Add any other info the donor dashboard might need
-      };
-      localStorage.setItem('user', JSON.stringify(mockUser));
-      
-      // Redirect to the donor dashboard
+    // Store mock user info in localStorage so the dashboard pages can use it
+    const mockUser = {
+      name: formData.name,
+      email: formData.email,
+      bloodType: formData.bloodType,
+      role: formData.role,
+      hospitalName: formData.organization,
+    };
+    localStorage.setItem('user', JSON.stringify(mockUser));
+    
+    // Redirect to the correct dashboard based on the selected role
+    if (formData.role === 'hospital') {
+      router.push("/hospital/dashboard");
+    } else if (formData.role === 'donor') {
       router.push("/donor/dashboard");
+    } else if (formData.role === 'admin') {
+      router.push("/admin/dashboard");
     }
+    // Note: setIsLoading(false) is not needed here because the component will unmount on redirect.
   };
 
   return (
@@ -135,7 +125,7 @@ export default function RegisterPage() {
                   <SelectContent>
                     <SelectItem value="hospital">Hospital</SelectItem>
                     <SelectItem value="donor">Donor</SelectItem>
-                    <SelectItem value="admin" disabled>Admin (Coming Soon)</SelectItem>
+                    <SelectItem value="admin">Admin</SelectItem>
                   </SelectContent>
                 </Select>
               </div>
@@ -185,14 +175,7 @@ export default function RegisterPage() {
                   <Select value={formData.bloodType} onValueChange={(value) => setFormData({ ...formData, bloodType: value })}>
                     <SelectTrigger><SelectValue placeholder="Select your blood type" /></SelectTrigger>
                     <SelectContent>
-                      <SelectItem value="A+">A+</SelectItem>
-                      <SelectItem value="A-">A-</SelectItem>
-                      <SelectItem value="B+">B+</SelectItem>
-                      <SelectItem value="B-">B-</SelectItem>
-                      <SelectItem value="AB+">AB+</SelectItem>
-                      <SelectItem value="AB-">AB-</SelectItem>
-                      <SelectItem value="O+">O+</SelectItem>
-                      <SelectItem value="O-">O-</SelectItem>
+                      <SelectItem value="A+">A+</SelectItem><SelectItem value="A-">A-</SelectItem><SelectItem value="B+">B+</SelectItem><SelectItem value="B-">B-</SelectItem><SelectItem value="AB+">AB+</SelectItem><SelectItem value="AB-">AB-</SelectItem><SelectItem value="O+">O+</SelectItem><SelectItem value="O-">O-</SelectItem>
                     </SelectContent>
                   </Select>
                 </div>
